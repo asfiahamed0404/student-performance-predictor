@@ -1,11 +1,8 @@
 # 🎓 Student Performance Predictor — End-to-End ML Project
 
-> A **production-style**, refactored & beautified version of the classic *"End To End Data Science Project"* tutorial by **Krish Naik**. Predicts a student's **Math Score** from demographic & academic features through a clean modular pipeline and a colorful animated Flask UI.
+> A **production-style**, refactored & beautified version of the classic *"End To End Data Science Project"* tutorial. Predicts a student's **Math Score** from demographic & academic features through a clean modular pipeline and a colorful animated Flask UI.
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=1m3CPP-93RI&t=14596s">
-    <img alt="Inspired by Krish Naik" src="https://img.shields.io/badge/Inspired%20by-Krish%20Naik-ec4899?style=for-the-badge&logo=youtube&logoColor=white">
-  </a>
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white">
   <img alt="Flask" src="https://img.shields.io/badge/Flask-3.0-000000?style=for-the-badge&logo=flask&logoColor=white">
   <img alt="scikit-learn" src="https://img.shields.io/badge/scikit--learn-1.3%2B-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white">
@@ -331,39 +328,11 @@ The best model (by R² on the test set) is auto-selected and serialized to `arti
 
 ---
 
-## 🙏 Credits & Inspiration
+## 📌 Project Notes
 
-This project is a **refactored, beautified & extended** version of the
-**"End To End Data Science Project"** tutorial by **Krish Naik** — a key resource
-in the *Master AI & Data Science with Krish Naik* YouTube series.
-
-> 🎥 Original tutorial:
-> [**End To End Data Science Project — Krish Naik**](https://www.youtube.com/watch?v=1m3CPP-93RI&t=14596s)
-
-The original walkthrough laid the foundation for the **modular pipeline**
-(`data_ingestion → data_transformation → model_trainer`) and the
-**Flask-based prediction UI**.
-
-### What this version adds on top
-- 🎨 **Colorful animated UI** — gradient background, glassmorphism, floating orbs, confetti & score-meter ring
-- 🛡️ **Robust error handling** — typed exception handlers, input validation, missing-artifact guards
-- ⚙️ **Engineering hardening** — `BASE_DIR`-based artifact paths, UTF-8 logger, `n_jobs` parallelized `GridSearchCV`
-- 🔌 **New API routes** — `/train` for one-click retraining, `/health` for JSON status
-- 📚 **Professional docs** — `LICENSE`, `environment.yml`, multi-platform setup helpers
-- 🐍 **Multiple setup paths** — Conda (prefix env), `venv`, `environment.yml`, one-click `.cmd` / `.sh`
-
-| | Original Tutorial | This Repo |
-| :--- | :---: | :---: |
-| Modular ML pipeline | ✅ | ✅ |
-| Flask web UI | ✅ | ✅ |
-| 8-model hyperparameter tuning | ✅ | ✅ |
-| Custom logger & exception | ✅ | ✅ (UTF-8 + dual handler) |
-| Colorful UI / animations | ❌ | ✅ |
-| `/train` & `/health` API | ❌ | ✅ |
-| Multi-platform setup | ❌ | ✅ |
-| Pinned dependencies | ❌ | ✅ |
-
-A huge thanks to **Krish Naik** for the clear, practical teaching that inspired this work. 🙏
+- The app trains from `data/stud.csv` and writes generated artifacts to `artifacts/`.
+- The `/train` route retrains the full pipeline, and `/health` verifies that required artifacts are present.
+- The prediction UI is designed for local Flask runs and the bundled setup scripts help reproduce the same environment on Windows, macOS, and Linux.
 
 ---
 
