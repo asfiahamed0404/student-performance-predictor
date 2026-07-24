@@ -99,7 +99,8 @@
 
 ## 🚀 Quick Start
 
-Pick the workflow that fits your machine. All three end up with the same running app.
+Pick **one** workflow that fits your machine. Do not create both a Conda
+environment and a standard Python `venv` in the same `venv` directory.
 
 ---
 
@@ -117,23 +118,40 @@ conda init
 ::     **Close & reopen your terminal** so the changes take effect.
 
 :: 4) Activate the env
-conda activate venv\
+conda activate .\venv
 
 :: 5) Install dependencies + editable package
 pip install -r requirements.txt
 pip install -e .
 ```
 
-> 💡 `conda activate venv\` works because the env was created with a **prefix path** (`-p venv`) — that's why the trailing `\` is required on Windows.
+> 💡 Conda must be installed and available in the terminal. A trailing `\` is
+> not required when activating a prefix environment.
 
 ---
 
 ### 🐍 Option B — `venv` (built-in, no Conda)
 
-**Windows (cmd / PowerShell):**
+**Windows PowerShell:**
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+pip install -e .
+```
+
+**Windows Command Prompt:**
 ```cmd
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate.bat
+pip install -r requirements.txt
+pip install -e .
+```
+
+**Windows Git Bash:**
+```bash
+python -m venv venv
+source venv/Scripts/activate
 pip install -r requirements.txt
 pip install -e .
 ```
@@ -144,6 +162,36 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
+```
+
+---
+
+### 🛠️ Existing Conda prefix cannot be activated
+
+If `venv` contains `conda-meta` but the `conda` command is unavailable, it is a
+Conda prefix environment whose Conda installation is missing or not configured.
+You can still run the project directly with that environment's Python:
+
+**PowerShell:**
+```powershell
+& .\venv\python.exe .\app.py
+```
+
+**Command Prompt:**
+```cmd
+venv\python.exe app.py
+```
+
+**Git Bash:**
+```bash
+./venv/python.exe app.py
+```
+
+To restore normal activation, install or repair Conda and then run:
+
+```powershell
+conda activate .\venv
+python app.py
 ```
 
 ---
