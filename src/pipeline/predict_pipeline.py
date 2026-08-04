@@ -22,7 +22,8 @@ class PredictionPipeline:
             if not os.path.exists(self.model_path) or not os.path.exists(self.preprocessor_path):
                 raise FileNotFoundError(
                     f"Model artifacts not found. Expected at '{self.model_path}' "
-                    f"and '{self.preprocessor_path}'. Train the pipeline first via /train."
+                    f"and '{self.preprocessor_path}'. artifacts/model.pkl and "
+                    "artifacts/preprocessor.pkl must be included in the deployment."
                 )
 
             model = load_object(file_path=self.model_path)

@@ -58,7 +58,6 @@
 ### 🔌 **API Endpoints**
 - `GET /` — Landing page
 - `GET|POST /predictdata` — Predict math score
-- `GET /train` — Retrain pipeline end-to-end
 - `GET /health` — JSON health & artifact check
 
 </td>
@@ -120,8 +119,8 @@ conda init
 :: 4) Activate the env
 conda activate .\venv
 
-:: 5) Install dependencies + editable package
-pip install -r requirements.txt
+:: 5) Install local training dependencies + editable package
+pip install -r requirements-training.txt
 pip install -e .
 ```
 
@@ -136,7 +135,7 @@ pip install -e .
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r requirements-training.txt
 pip install -e .
 ```
 
@@ -144,7 +143,7 @@ pip install -e .
 ```cmd
 python -m venv venv
 venv\Scripts\activate.bat
-pip install -r requirements.txt
+pip install -r requirements-training.txt
 pip install -e .
 ```
 
@@ -152,7 +151,7 @@ pip install -e .
 ```bash
 python -m venv venv
 source venv/Scripts/activate
-pip install -r requirements.txt
+pip install -r requirements-training.txt
 pip install -e .
 ```
 
@@ -160,7 +159,7 @@ pip install -e .
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-training.txt
 pip install -e .
 ```
 
@@ -222,11 +221,8 @@ Both scripts create the env, install deps and print the next steps.
 ### 🧠 Train the model
 
 ```bash
-# Option 1 — trigger via the API
-python app.py
-# then visit http://127.0.0.1:5000/train
-
-# Option 2 — direct CLI
+# Training runs offline through the CLI, never through a public web endpoint.
+pip install -r requirements-training.txt
 python -m src.pipeline.train_pipeline
 ```
 
@@ -260,7 +256,6 @@ Then open **<http://127.0.0.1:5000/>** in your browser.
 | `GET`  | `/`             | Colorful landing page                                |
 | `GET`  | `/predictdata`  | Render the prediction form                           |
 | `POST` | `/predictdata`  | Predict the math score from form fields              |
-| `GET`  | `/train`        | Retrain the end-to-end pipeline                      |
 | `GET`  | `/health`       | JSON health-check incl. artifact existence          |
 
 ### Example: `POST /predictdata`
@@ -286,7 +281,8 @@ Returns the rendered HTML containing the predicted score.
 ML_Project/
 ├── app.py                         # Flask entry-point + routes
 ├── setup.py                       # Package configuration
-├── requirements.txt
+├── requirements.txt               # Production/prediction server
+├── requirements-training.txt      # Local training environment
 ├── LICENSE
 ├── README.md
 ├── .env.example
@@ -368,7 +364,7 @@ The best model (by R² on the test set) is auto-selected and serialized to `arti
 - [x] Colorful animated UI with confetti & score meter
 - [x] Robust error handling & input validation
 - [x] Configurable artifact paths (BASE_DIR-based)
-- [x] `/train` & `/health` API routes
+- [x] `/health` API route
 - [ ] Dockerize the app
 - [ ] Add CI (GitHub Actions) — lint + import sanity
 - [ ] Add SHAP feature importance plot
@@ -379,7 +375,9 @@ The best model (by R² on the test set) is auto-selected and serialized to `arti
 ## 📌 Project Notes
 
 - The app trains from `data/stud.csv` and writes generated artifacts to `artifacts/`.
-- The `/train` route retrains the full pipeline, and `/health` verifies that required artifacts are present.
+- Production/prediction server: `pip install -r requirements.txt`.
+- Local training environment: `pip install -r requirements-training.txt`.
+- Training must be run offline with `python -m src.pipeline.train_pipeline`, not through a public web endpoint. `/health` verifies that required artifacts are present.
 - The prediction UI is designed for local Flask runs and the bundled setup scripts help reproduce the same environment on Windows, macOS, and Linux.
 
 ---

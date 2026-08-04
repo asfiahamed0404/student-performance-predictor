@@ -6,7 +6,6 @@ warnings.filterwarnings("ignore")
 from flask import Flask, request, render_template, jsonify
 
 from src.pipeline.predict_pipeline import CustomData, PredictionPipeline
-from src.pipeline.train_pipeline import run_training_pipeline
 
 application = Flask(__name__)
 app = application
@@ -54,7 +53,10 @@ def predict_datapoint():
         return render_template(
             "home.html",
             results=None,
-            error="Model artifacts not found. Please run /train first to generate them.",
+            error=(
+                "Model artifacts not found. artifacts/model.pkl and "
+                "artifacts/preprocessor.pkl must be included in the deployment."
+            ),
         )
     except Exception as e:
         return render_template(
@@ -62,21 +64,6 @@ def predict_datapoint():
             results=None,
             error=f"Something went wrong: {str(e)}",
         )
-
-
-@app.route("/train", methods=["GET"])
-def train():
-    try:
-        r2 = run_training_pipeline()
-        return jsonify(
-            {
-                "status": "success",
-                "message": "Training pipeline completed successfully.",
-                "r2_score": r2,
-            }
-        )
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @app.route("/health", methods=["GET"])

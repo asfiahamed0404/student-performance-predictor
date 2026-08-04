@@ -1,12 +1,5 @@
-pandas>=2.0
-numpy>=1.24
-seaborn>=0.13
-matplotlib>=3.7
-scikit-learn>=1.3
-catboost>=1.2
-xgboost>=2.0
-dill>=0.3.7
-Flask>=3.0
-
-# Optional: install the local package as editable when using requirements.txt directly
-# -e .
+Flask==3.1.3
+numpy==2.4.4
+pandas==3.0.1
+scikit-learn==1.7.1
+dill==0.4.1
