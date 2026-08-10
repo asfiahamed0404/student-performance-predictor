@@ -21,6 +21,8 @@ def predict_datapoint():
     if request.method == "GET":
         return render_template("home.html")
 
+    form_values = request.form.to_dict(flat=True)
+
     try:
         data = CustomData(
             gender=request.form.get("gender"),
@@ -42,12 +44,14 @@ def predict_datapoint():
         return render_template(
             "home.html",
             results=round(prediction_value, 2),
+            form_values=form_values,
         )
     except (ValueError, TypeError) as ve:
         return render_template(
             "home.html",
             results=None,
             error="Please enter valid numeric scores between 0 and 100.",
+            form_values=form_values,
         )
     except FileNotFoundError as fnf:
         return render_template(
@@ -57,12 +61,14 @@ def predict_datapoint():
                 "Model artifacts not found. artifacts/model.pkl and "
                 "artifacts/preprocessor.pkl must be included in the deployment."
             ),
+            form_values=form_values,
         )
     except Exception as e:
         return render_template(
             "home.html",
             results=None,
             error=f"Something went wrong: {str(e)}",
+            form_values=form_values,
         )
 
 

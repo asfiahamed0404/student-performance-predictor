@@ -3,146 +3,207 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ML Project — Student Performance Predictor</title>
+  <title>ML Project | Student Score Studio</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <style>
-    .hero {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 2.5rem;
-      align-items: center;
-      padding: 3.5rem;
-    }
-    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding: 2rem; } }
-    .hero h1 {
-      font-size: clamp(2rem, 4.5vw, 3.4rem);
-      margin: 0.6rem 0 1rem;
-      line-height: 1.1;
-      background: linear-gradient(135deg, #fff, #c7d2fe 60%, #fbcfe8);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .hero p.lead { color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; max-width: 56ch; }
-    .hero .cta { margin-top: 1.6rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
-    .stats { display: flex; gap: 1.2rem; margin-top: 2rem; flex-wrap: wrap; }
-    .stat { padding: 0.9rem 1.1rem; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
-    .stat .num { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, #34d399, #06b6d4); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .stat .lbl { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-
-    .visual {
-      position: relative;
-      padding: 2rem;
-      display: grid;
-      place-items: center;
-    }
-    .visual .orb {
-      width: 320px; height: 320px;
-      border-radius: 50%;
-      background: conic-gradient(from 180deg, #6366f1, #ec4899, #06b6d4, #10b981, #f59e0b, #6366f1);
-      filter: blur(2px);
-      animation: spin 12s linear infinite;
-      box-shadow: 0 30px 60px rgba(99,102,241,0.35);
-    }
-    .visual .core {
-      position: absolute;
-      width: 220px; height: 220px;
-      border-radius: 50%;
-      background: rgba(15, 12, 41, 0.85);
-      border: 1px solid rgba(255,255,255,0.18);
-      display: grid; place-items: center;
-      text-align: center;
-      padding: 1rem;
-    }
-    .visual .core h2 { margin: 0; font-size: 1.4rem; }
-    .visual .core p { margin: 0.4rem 0 0; color: var(--text-muted); font-size: 0.85rem; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    section.features { margin-top: 3rem; }
-    section.features h2 { text-align: center; font-size: 1.6rem; margin-bottom: 1.4rem; }
-  </style>
 </head>
-<body>
-  <div class="container">
-    <nav style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
-      <div style="display:flex;align-items:center;gap:0.6rem;">
-        <span style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#ec4899);display:grid;place-items:center;font-weight:800;">M</span>
-        <strong style="letter-spacing:0.4px;">ML Project</strong>
-      </div>
-      <div style="display:flex;gap:0.6rem;">
-        <a class="btn btn-ghost" href="{{ url_for('predict_datapoint') }}">Predict</a>
-        <a class="btn btn-primary" href="{{ url_for('predict_datapoint') }}">Get Started</a>
+<body class="landing-page">
+  <div class="landing-frame">
+    <nav class="landing-nav" aria-label="Primary navigation">
+      <a class="project-brand" href="{{ url_for('index') }}" aria-label="ML Project home">
+        <span class="brand-stamp">ML</span>
+        <span class="brand-copy">
+          <strong>ML Project</strong>
+          <small>Score studio</small>
+        </span>
+      </a>
+
+      <div class="landing-nav-actions">
+        <a class="landing-top-link" href="#method">How it works</a>
+        <a class="landing-nav-cta" href="{{ url_for('predict_datapoint') }}">Start predicting <span aria-hidden="true">&nearr;</span></a>
       </div>
     </nav>
 
-    <header class="hero glass">
-      <div>
-        <span class="badge fade-up">End-to-End ML • Flask • Scikit-learn</span>
-        <h1 class="fade-up delay-1">Predict Student Math Scores with Confidence</h1>
-        <p class="lead fade-up delay-2">
-          An end-to-end machine learning project that ingests the Student Performance dataset,
-          trains multiple regression models with hyperparameter tuning, and serves the best one
-          through a clean, responsive web UI.
-        </p>
-        <div class="cta fade-up delay-3">
-          <a class="btn btn-primary" href="{{ url_for('predict_datapoint') }}">Try the Predictor →</a>
-          <a class="btn btn-ghost" href="/health">API Health</a>
-        </div>
-        <div class="stats fade-up delay-4">
-          <div class="stat"><div class="num">8+</div><div class="lbl">Models Tuned</div></div>
-          <div class="stat"><div class="num">7</div><div class="lbl">Input Features</div></div>
-          <div class="stat"><div class="num">3-Stage</div><div class="lbl">Pipeline</div></div>
-        </div>
-      </div>
+    <main>
+      <header class="landing-hero">
+        <div class="landing-hero-copy">
+          <p class="eyebrow"><span aria-hidden="true"></span>Student performance model</p>
+          <h1>Turn today's signals into a clearer next step.</h1>
+          <p class="landing-lead">
+            This score studio uses student context, reading, and writing performance to estimate a future maths result.
+            It is built for an understandable snapshot, not a black-box mystery.
+          </p>
 
-      <div class="visual fade-up delay-2">
-        <div class="orb" aria-hidden="true"></div>
-        <div class="core">
-          <div>
-            <h2>Math Score</h2>
-            <p>Regression model trained on student demographics & scores.</p>
+          <div class="landing-cta-row">
+            <a class="landing-primary" href="{{ url_for('predict_datapoint') }}">
+              <span>Open score studio</span>
+              <span class="button-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+            <a class="landing-secondary" href="#method">See the method <span aria-hidden="true">&darr;</span></a>
           </div>
-        </div>
-      </div>
-    </header>
 
-    <section class="features">
-      <h2>What's Inside</h2>
-      <div class="grid grid-3">
-        <div class="feature fade-up">
-          <div class="icon">📥</div>
-          <h3>Data Ingestion</h3>
-          <p>Loads <code>stud.csv</code>, persists raw/train/test splits into the <code>artifacts/</code> folder.</p>
+          <dl class="landing-stats" aria-label="Project statistics">
+            <div>
+              <dt>8+</dt>
+              <dd>models compared</dd>
+            </div>
+            <div>
+              <dt>7</dt>
+              <dd>input signals</dd>
+            </div>
+            <div>
+              <dt>100</dt>
+              <dd>point score scale</dd>
+            </div>
+          </dl>
         </div>
-        <div class="feature fade-up delay-1">
-          <div class="icon">🛠️</div>
-          <h3>Data Transformation</h3>
-          <p>Numerical scaling + categorical one-hot encoding via a reusable Scikit-learn <code>ColumnTransformer</code>.</p>
-        </div>
-        <div class="feature fade-up delay-2">
-          <div class="icon">🧠</div>
-          <h3>Model Training</h3>
-          <p>Compares 8 regressors with <code>GridSearchCV</code> and persists the best one as <code>model.pkl</code>.</p>
-        </div>
-        <div class="feature fade-up delay-1">
-          <div class="icon">🌐</div>
-          <h3>Flask Web App</h3>
-          <p>A responsive UI with input validation, animated result card, score meter & confetti.</p>
-        </div>
-        <div class="feature fade-up delay-2">
-          <div class="icon">📦</div>
-          <h3>Custom Logging & Errors</h3>
-          <p>Timestamped logs to file + console, plus a custom exception class with file & line info.</p>
-        </div>
-        <div class="feature fade-up delay-3">
-          <div class="icon">🚀</div>
-          <h3>One-Click Training</h3>
-          <p>Hit <code>/train</code> to retrain the pipeline end-to-end and refresh the served model.</p>
-        </div>
-      </div>
-    </section>
 
-    <p class="footer">Crafted with ❤ for learning • Flask • scikit-learn • catboost • xgboost</p>
+        <aside class="signal-board" aria-label="Example model telemetry">
+          <div class="board-header">
+            <span>Model telemetry</span>
+            <span class="board-live"><i aria-hidden="true"></i>Sample signal</span>
+          </div>
+
+          <div class="board-score">
+            <span>Estimated maths score</span>
+            <strong>73.8</strong>
+            <small>/ 100</small>
+          </div>
+
+          <svg class="score-plot" viewBox="0 0 420 216" role="img" aria-label="Illustrative score trend chart">
+            <g class="plot-grid">
+              <path d="M24 24H400"></path>
+              <path d="M24 72H400"></path>
+              <path d="M24 120H400"></path>
+              <path d="M24 168H400"></path>
+              <path d="M76 8V190"></path>
+              <path d="M172 8V190"></path>
+              <path d="M268 8V190"></path>
+              <path d="M364 8V190"></path>
+            </g>
+            <path class="plot-area" d="M26 158 C78 143, 102 126, 138 132 S196 145, 230 103 S294 81, 330 68 S374 65, 398 32 L398 190 L26 190 Z"></path>
+            <path class="plot-line" d="M26 158 C78 143, 102 126, 138 132 S196 145, 230 103 S294 81, 330 68 S374 65, 398 32"></path>
+            <circle class="plot-point" cx="398" cy="32" r="8"></circle>
+            <circle class="plot-core" cx="398" cy="32" r="3"></circle>
+          </svg>
+
+          <div class="board-footer">
+            <span><b>72</b> reading</span>
+            <span><b>70</b> writing</span>
+            <span><b>+3.8</b> model lift</span>
+          </div>
+        </aside>
+      </header>
+
+      <section class="method-section" id="method" aria-labelledby="method-title">
+        <div class="method-intro">
+          <p class="eyebrow"><span aria-hidden="true"></span>Plain-language workflow</p>
+          <h2 id="method-title">A forecast you can follow from input to insight.</h2>
+          <p>Every estimate follows a small, visible path. No account, no long setup, and no unexplained dashboard.</p>
+        </div>
+
+        <ol class="method-list">
+          <li>
+            <span class="method-number">01</span>
+            <h3>Set the context</h3>
+            <p>Choose the student details that give the model its starting point.</p>
+          </li>
+          <li>
+            <span class="method-number">02</span>
+            <h3>Add recent scores</h3>
+            <p>Reading and writing results anchor the estimate on the 100-point scale.</p>
+          </li>
+          <li>
+            <span class="method-number">03</span>
+            <h3>Read the signal</h3>
+            <p>Open a focused result window with the estimate and a useful interpretation.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="foundation-section" aria-labelledby="foundation-title">
+        <div class="foundation-heading">
+          <div>
+            <p class="eyebrow"><span aria-hidden="true"></span>Under the surface</p>
+            <h2 id="foundation-title">Built as an end-to-end ML project.</h2>
+          </div>
+          <p>From raw data to a served prediction, the work remains connected and traceable.</p>
+        </div>
+
+        <div class="foundation-grid">
+          <article class="foundation-item">
+            <span class="foundation-index">A</span>
+            <h3>Data preparation</h3>
+            <p>Student records move through a repeatable ingestion and transformation flow before modelling.</p>
+          </article>
+          <article class="foundation-item">
+            <span class="foundation-index">B</span>
+            <h3>Model selection</h3>
+            <p>Multiple regressors are compared and tuned so the strongest fitted model serves the estimate.</p>
+          </article>
+          <article class="foundation-item">
+            <span class="foundation-index">C</span>
+            <h3>Useful delivery</h3>
+            <p>The Flask interface turns the pipeline into a quick, responsive score-checking experience.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="capability-section" aria-labelledby="capability-title">
+        <div class="capability-heading">
+          <div>
+            <p class="eyebrow"><span aria-hidden="true"></span>Project map</p>
+            <h2 id="capability-title">What's inside the studio?</h2>
+          </div>
+          <p>Six connected parts take the project from source data to a useful score forecast.</p>
+        </div>
+
+        <div class="capability-grid">
+          <article class="capability-card">
+            <span class="capability-mark">IN</span>
+            <h3>Data ingestion</h3>
+            <p>Loads <code>stud.csv</code> and preserves the raw, train, and test data in the project artifacts.</p>
+          </article>
+          <article class="capability-card">
+            <span class="capability-mark">TX</span>
+            <h3>Data transformation</h3>
+            <p>Scales numerical fields and one-hot encodes categories through a reusable transformer.</p>
+          </article>
+          <article class="capability-card">
+            <span class="capability-mark">ML</span>
+            <h3>Model training</h3>
+            <p>Compares regression models with tuning, then saves the strongest model for predictions.</p>
+          </article>
+          <article class="capability-card">
+            <span class="capability-mark">UI</span>
+            <h3>Flask web app</h3>
+            <p>Delivers a responsive predictor with guided inputs, validation, and a focused result popup.</p>
+          </article>
+          <article class="capability-card">
+            <span class="capability-mark">LG</span>
+            <h3>Logging &amp; errors</h3>
+            <p>Keeps timestamped logging and contextual exceptions close to the underlying ML workflow.</p>
+          </article>
+          <article class="capability-card">
+            <span class="capability-mark">TR</span>
+            <h3>Training workflow</h3>
+            <p>The included training pipeline can regenerate the model artifacts when the data changes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="landing-close">
+        <p>Ready to make the next score easier to see?</p>
+        <a class="landing-primary" href="{{ url_for('predict_datapoint') }}">
+          <span>Predict a maths score</span>
+          <span class="button-arrow" aria-hidden="true">&nearr;</span>
+        </a>
+      </section>
+    </main>
+
+    <footer class="landing-footer">
+      <span>ML Project &middot; Student performance estimator</span>
+      <a href="/health">System health</a>
+    </footer>
   </div>
 </body>
 </html>
