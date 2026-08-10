@@ -1,157 +1,230 @@
+{% set values = form_values|default({}) %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Exam Performance Indicator</title>
+  <title>Math Score Studio | ML Project</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <style>
-    .predict-shell {
-      max-width: 920px;
-      margin: 2rem auto;
-      padding: 2rem 2.2rem;
-    }
-    .predict-header {
-      text-align: center;
-      margin-bottom: 1.4rem;
-    }
-    .predict-header h1 {
-      margin: 0.4rem 0 0.4rem;
-      font-size: clamp(1.5rem, 3vw, 2.1rem);
-      background: linear-gradient(135deg, #fff, #a5b4fc 50%, #f9a8d4);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .predict-header p { color: var(--text-muted); margin: 0; }
-    form .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    @media (max-width: 640px) { form .row { grid-template-columns: 1fr; } }
-    .submit-row { margin-top: 0.4rem; }
-  </style>
 </head>
-<body>
-  <div class="container">
-    <nav style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
-      <a href="{{ url_for('index') }}" style="display:flex;align-items:center;gap:0.6rem;color:var(--text);text-decoration:none;">
-        <span style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#ec4899);display:grid;place-items:center;font-weight:800;">M</span>
-        <strong>ML Project</strong>
+<body class="prediction-page">
+  <div class="prediction-frame">
+    <nav class="predict-nav" aria-label="Primary navigation">
+      <a class="project-brand" href="{{ url_for('index') }}">
+        <span class="brand-stamp">ML</span>
+        <span class="brand-copy">
+          <strong>ML Project</strong>
+          <small>Score studio</small>
+        </span>
       </a>
-      <a class="btn btn-ghost" href="{{ url_for('index') }}">← Home</a>
+      <a class="return-link" href="{{ url_for('index') }}">
+        <span aria-hidden="true">&larr;</span>
+        Back to overview
+      </a>
     </nav>
 
-    <div class="predict-shell glass fade-up">
-      <div class="predict-header">
-        <span class="badge">Live Prediction</span>
-        <h1>Student Exam Performance Indicator</h1>
-        <p>Fill in the details below and our trained model will estimate the student's math score.</p>
-      </div>
+    <main class="prediction-main">
+      <section class="predict-shell" aria-labelledby="predict-title">
+        <aside class="forecast-rail" aria-label="Prediction status">
+          <p class="rail-kicker">Forecast desk</p>
+          <p class="rail-number">01<span>/01</span></p>
+          <div class="rail-rule" aria-hidden="true"></div>
+          <p class="rail-copy">A compact estimate, built from the student details you provide.</p>
+          <p class="rail-status"><span aria-hidden="true"></span>Model online</p>
+        </aside>
 
-      <form action="{{ url_for('predict_datapoint') }}" method="post">
-        <div class="row">
-          <div class="form-group">
-            <label class="form-label" for="gender">Gender</label>
-            <select id="gender" class="form-control" name="gender" required>
-              <option value="" disabled selected>Select your Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
+        <div class="predict-content">
+          <header class="predict-header">
+            <p class="eyebrow"><span aria-hidden="true"></span>Math score forecast</p>
+            <h1 id="predict-title">Build a clearer picture of the next score.</h1>
+            <p>Enter the learner's context and recent scores. The model turns those signals into a practical maths estimate.</p>
+          </header>
 
-          <div class="form-group">
-            <label class="form-label" for="race_ethnicity">Race or Ethnicity</label>
-            <select id="race_ethnicity" class="form-control" name="race_ethnicity" required>
-              <option value="" disabled selected>Select Ethnicity</option>
-              <option value="group A">Group A</option>
-              <option value="group B">Group B</option>
-              <option value="group C">Group C</option>
-              <option value="group D">Group D</option>
-              <option value="group E">Group E</option>
-            </select>
-          </div>
+          <form class="predict-form" data-prediction-form action="{{ url_for('predict_datapoint') }}" method="post" novalidate>
+            <div class="form-heading">
+              <span>Student snapshot</span>
+              <small>All fields are required</small>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="gender">Gender</label>
+                <div class="select-field" data-select>
+                  <select id="gender" class="select-native" name="gender" required aria-hidden="true" tabindex="-1">
+                    <option value="" disabled {% if not values.get('gender') %}selected{% endif %}>Select your gender</option>
+                    <option value="male" {% if values.get('gender') == 'male' %}selected{% endif %}>Male</option>
+                    <option value="female" {% if values.get('gender') == 'female' %}selected{% endif %}>Female</option>
+                  </select>
+                  <button class="select-trigger" id="gender-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="gender-options">
+                    <span class="select-value" data-select-label>Select your gender</span>
+                    <span class="select-chevron" aria-hidden="true"></span>
+                  </button>
+                  <div class="select-menu" id="gender-options" role="listbox" aria-labelledby="gender-trigger">
+                    <button class="select-option" type="button" role="option" data-value="male" data-label="Male" aria-selected="false">
+                      <span class="option-token">M</span>Male
+                    </button>
+                    <button class="select-option" type="button" role="option" data-value="female" data-label="Female" aria-selected="false">
+                      <span class="option-token">F</span>Female
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="race_ethnicity">Race or ethnicity</label>
+                <div class="select-field" data-select>
+                  <select id="race_ethnicity" class="select-native" name="race_ethnicity" required aria-hidden="true" tabindex="-1">
+                    <option value="" disabled {% if not values.get('race_ethnicity') %}selected{% endif %}>Select group</option>
+                    <option value="group A" {% if values.get('race_ethnicity') == 'group A' %}selected{% endif %}>Group A</option>
+                    <option value="group B" {% if values.get('race_ethnicity') == 'group B' %}selected{% endif %}>Group B</option>
+                    <option value="group C" {% if values.get('race_ethnicity') == 'group C' %}selected{% endif %}>Group C</option>
+                    <option value="group D" {% if values.get('race_ethnicity') == 'group D' %}selected{% endif %}>Group D</option>
+                    <option value="group E" {% if values.get('race_ethnicity') == 'group E' %}selected{% endif %}>Group E</option>
+                  </select>
+                  <button class="select-trigger" id="race-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="race-options">
+                    <span class="select-value" data-select-label>Select group</span>
+                    <span class="select-chevron" aria-hidden="true"></span>
+                  </button>
+                  <div class="select-menu select-menu--groups" id="race-options" role="listbox" aria-labelledby="race-trigger">
+                    {% for group in ['A', 'B', 'C', 'D', 'E'] %}
+                      <button class="select-option" type="button" role="option" data-value="group {{ group }}" data-label="Group {{ group }}" aria-selected="false">
+                        <span class="option-token">{{ group }}</span>Group {{ group }}
+                      </button>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="parental_level_of_education">Parental education</label>
+                <div class="select-field" data-select>
+                  <select id="parental_level_of_education" class="select-native" name="parental_level_of_education" required aria-hidden="true" tabindex="-1">
+                    <option value="" disabled {% if not values.get('parental_level_of_education') %}selected{% endif %}>Select education level</option>
+                    <option value="associate's degree" {% if values.get('parental_level_of_education') == "associate's degree" %}selected{% endif %}>Associate's degree</option>
+                    <option value="bachelor's degree" {% if values.get('parental_level_of_education') == "bachelor's degree" %}selected{% endif %}>Bachelor's degree</option>
+                    <option value="high school" {% if values.get('parental_level_of_education') == 'high school' %}selected{% endif %}>High school</option>
+                    <option value="master's degree" {% if values.get('parental_level_of_education') == "master's degree" %}selected{% endif %}>Master's degree</option>
+                    <option value="some college" {% if values.get('parental_level_of_education') == 'some college' %}selected{% endif %}>Some college</option>
+                    <option value="some high school" {% if values.get('parental_level_of_education') == 'some high school' %}selected{% endif %}>Some high school</option>
+                  </select>
+                  <button class="select-trigger" id="education-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="education-options">
+                    <span class="select-value" data-select-label>Select education level</span>
+                    <span class="select-chevron" aria-hidden="true"></span>
+                  </button>
+                  <div class="select-menu select-menu--education" id="education-options" role="listbox" aria-labelledby="education-trigger">
+                    <button class="select-option" type="button" role="option" data-value="associate's degree" data-label="Associate's degree" aria-selected="false"><span class="option-token">AS</span>Associate's degree</button>
+                    <button class="select-option" type="button" role="option" data-value="bachelor's degree" data-label="Bachelor's degree" aria-selected="false"><span class="option-token">BA</span>Bachelor's degree</button>
+                    <button class="select-option" type="button" role="option" data-value="high school" data-label="High school" aria-selected="false"><span class="option-token">HS</span>High school</button>
+                    <button class="select-option" type="button" role="option" data-value="master's degree" data-label="Master's degree" aria-selected="false"><span class="option-token">MS</span>Master's degree</button>
+                    <button class="select-option" type="button" role="option" data-value="some college" data-label="Some college" aria-selected="false"><span class="option-token">SC</span>Some college</button>
+                    <button class="select-option" type="button" role="option" data-value="some high school" data-label="Some high school" aria-selected="false"><span class="option-token">SH</span>Some high school</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="lunch">Lunch type</label>
+                <div class="select-field" data-select>
+                  <select id="lunch" class="select-native" name="lunch" required aria-hidden="true" tabindex="-1">
+                    <option value="" disabled {% if not values.get('lunch') %}selected{% endif %}>Select lunch type</option>
+                    <option value="free/reduced" {% if values.get('lunch') == 'free/reduced' %}selected{% endif %}>Free / reduced</option>
+                    <option value="standard" {% if values.get('lunch') == 'standard' %}selected{% endif %}>Standard</option>
+                  </select>
+                  <button class="select-trigger" id="lunch-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="lunch-options">
+                    <span class="select-value" data-select-label>Select lunch type</span>
+                    <span class="select-chevron" aria-hidden="true"></span>
+                  </button>
+                  <div class="select-menu" id="lunch-options" role="listbox" aria-labelledby="lunch-trigger">
+                    <button class="select-option" type="button" role="option" data-value="free/reduced" data-label="Free / reduced" aria-selected="false"><span class="option-token">FR</span>Free / reduced</button>
+                    <button class="select-option" type="button" role="option" data-value="standard" data-label="Standard" aria-selected="false"><span class="option-token">ST</span>Standard</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="test_preparation_course">Test preparation</label>
+                <div class="select-field" data-select>
+                  <select id="test_preparation_course" class="select-native" name="test_preparation_course" required aria-hidden="true" tabindex="-1">
+                    <option value="" disabled {% if not values.get('test_preparation_course') %}selected{% endif %}>Select preparation status</option>
+                    <option value="none" {% if values.get('test_preparation_course') == 'none' %}selected{% endif %}>None</option>
+                    <option value="completed" {% if values.get('test_preparation_course') == 'completed' %}selected{% endif %}>Completed</option>
+                  </select>
+                  <button class="select-trigger" id="preparation-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="preparation-options">
+                    <span class="select-value" data-select-label>Select preparation status</span>
+                    <span class="select-chevron" aria-hidden="true"></span>
+                  </button>
+                  <div class="select-menu" id="preparation-options" role="listbox" aria-labelledby="preparation-trigger">
+                    <button class="select-option" type="button" role="option" data-value="none" data-label="None" aria-selected="false"><span class="option-token">N</span>None</button>
+                    <button class="select-option" type="button" role="option" data-value="completed" data-label="Completed" aria-selected="false"><span class="option-token">C</span>Completed</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group score-field">
+                <label class="form-label" for="reading_score">Reading score <span>(out of 100)</span></label>
+                <input id="reading_score" class="score-control" type="number" name="reading_score" value="{{ values.get('reading_score', '') }}" placeholder="e.g. 72" min="0" max="100" required>
+              </div>
+
+              <div class="form-group score-field">
+                <label class="form-label" for="writing_score">Writing score <span>(out of 100)</span></label>
+                <input id="writing_score" class="score-control" type="number" name="writing_score" value="{{ values.get('writing_score', '') }}" placeholder="e.g. 70" min="0" max="100" required>
+              </div>
+            </div>
+
+            <p class="form-message" data-form-message role="alert" aria-live="assertive"></p>
+
+            <div class="submit-row">
+              <button class="score-button" type="submit">
+                <span>Predict maths score</span>
+                <span class="button-arrow" aria-hidden="true">&nearr;</span>
+              </button>
+              <p>Results are estimates, not official grades.</p>
+            </div>
+          </form>
+
+          {% if error %}
+            <div class="server-alert" role="alert">{{ error }}</div>
+          {% endif %}
         </div>
+      </section>
+    </main>
 
-        <div class="row">
-          <div class="form-group">
-            <label class="form-label" for="parental_level_of_education">Parental Level of Education</label>
-            <select id="parental_level_of_education" class="form-control" name="parental_level_of_education" required>
-              <option value="" disabled selected>Select Parent Education</option>
-              <option value="associate's degree">Associate's Degree</option>
-              <option value="bachelor's degree">Bachelor's Degree</option>
-              <option value="high school">High School</option>
-              <option value="master's degree">Master's Degree</option>
-              <option value="some college">Some College</option>
-              <option value="some high school">Some High School</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="lunch">Lunch Type</label>
-            <select id="lunch" class="form-control" name="lunch" required>
-              <option value="" disabled selected>Select Lunch Type</option>
-              <option value="free/reduced">Free / Reduced</option>
-              <option value="standard">Standard</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="form-group">
-            <label class="form-label" for="test_preparation_course">Test Preparation Course</label>
-            <select id="test_preparation_course" class="form-control" name="test_preparation_course" required>
-              <option value="" disabled selected>Select Test Course</option>
-              <option value="none">None</option>
-              <option value="completed">Completed</option>
-            </select>
-          </div>
-          <div></div>
-        </div>
-
-        <div class="row">
-          <div class="form-group">
-            <label class="form-label" for="reading_score">Reading Score (out of 100)</label>
-            <input id="reading_score" class="form-control" type="number" name="reading_score"
-                   placeholder="e.g. 72" min="0" max="100" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="writing_score">Writing Score (out of 100)</label>
-            <input id="writing_score" class="form-control" type="number" name="writing_score"
-                   placeholder="e.g. 70" min="0" max="100" required />
-          </div>
-        </div>
-
-        <div class="submit-row">
-          <button class="btn btn-primary" type="submit">✨ Predict Math Score</button>
-        </div>
-      </form>
-
-      {% if results is defined and results is not none %}
-        <div class="result-card" role="status" aria-live="polite">
-          <div class="result-label">Predicted Math Score</div>
-          <div class="score-meter" data-pct="{{ results }}">
-            <div class="score-inner">{{ results }}</div>
-          </div>
-          <div class="result-value">{{ results }} / 100</div>
-          <div class="result-meta">
-            {% if results >= 75 %}Excellent — strong predicted performance. 🏆
-            {% elif results >= 50 %}Good — a solid expected score. 👍
-            {% elif results >= 25 %}Needs improvement — focus on fundamentals. 📘
-            {% else %}At-risk — extra support recommended. 🛟
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
-
-      {% if error %}
-        <div class="alert" role="alert">⚠ {{ error }}</div>
-      {% endif %}
-    </div>
-
-    <p class="footer">© ML Project • Built with Flask • scikit-learn • catboost • xgboost</p>
+    <p class="predict-footer">ML Project &middot; Student performance estimator</p>
   </div>
+
+  {% if results is defined and results is not none %}
+    <dialog class="prediction-modal" data-prediction-modal aria-labelledby="prediction-result-title">
+      <div class="modal-surface">
+        <button class="modal-close" type="button" data-modal-close aria-label="Close prediction result">&times;</button>
+        <p class="modal-kicker"><span aria-hidden="true"></span>Forecast generated</p>
+        <h2 id="prediction-result-title">Your predicted maths score</h2>
+
+        <div class="modal-score-layout">
+          <div class="score-meter" data-pct="{{ results }}" aria-label="Predicted score: {{ results }} out of 100">
+            <span class="score-inner">{{ results }}</span>
+          </div>
+          <div>
+            <p class="modal-score-caption">out of 100</p>
+            <p class="modal-score-note">Calculated from the submitted student snapshot.</p>
+          </div>
+        </div>
+
+        <div class="result-reading">
+          {% if results >= 75 %}
+            Strong outlook &mdash; the current signals point to confident performance.
+          {% elif results >= 50 %}
+            Steady outlook &mdash; the foundation is in place for a solid result.
+          {% elif results >= 25 %}
+            Growth opportunity &mdash; a little extra practice could make a real difference.
+          {% else %}
+            Support recommended &mdash; focus on the core skills before the next assessment.
+          {% endif %}
+        </div>
+
+        <button class="modal-action" type="button" data-modal-close>Review the inputs <span aria-hidden="true">&rarr;</span></button>
+      </div>
+    </dialog>
+  {% endif %}
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
