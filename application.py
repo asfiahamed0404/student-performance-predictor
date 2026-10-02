@@ -3,12 +3,25 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, redirect
 
 from src.pipeline.predict_pipeline import CustomData, PredictionPipeline
 
 application = Flask(__name__)
 app = application
+
+
+@app.before_request
+def redirect_direct_eb_requests():
+    if request.path == "/health" or request.method not in ("GET", "HEAD"):
+        return None
+    if request.headers.get("X-From-CloudFront") == "yes":
+        return None
+
+    target = f"https://d16l6hogcgmcvh.cloudfront.net{request.path}"
+    if request.query_string:
+        target += f"?{request.query_string.decode('latin-1')}"
+    return redirect(target, code=302)
 
 
 @app.route("/")
